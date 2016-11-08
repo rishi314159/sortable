@@ -9,7 +9,11 @@ class Products(val filename:String) extends ProductsTrait{
   
   
   
+  /** Takes a listing (prodDescription). Returns
+   *  None if product is not found products. Some(product) if the 
+   */
   def find(prodDescription:JsObject):Option[JsObject] = {
+    
     val manufacturer = prodDescription.value("manufacturer").toString().toLowerCase().replaceAll("[^A-Za-z0-9]","")
     val title = prodDescription.value("title").toString().toLowerCase().replaceAll("[^A-Za-z0-9]","")
     
@@ -35,6 +39,13 @@ class Products(val filename:String) extends ProductsTrait{
   
   
   
+  // dataMap is dictionary with manufacturers as the keys. This is
+  //constructed to make search more efficient in find. One can view it like a tree
+  //              datamap
+  //            /      /   ...
+  //       sony    canon ......
+  //      /  | ..   /   | ...
+  //   DSC1 T99 .. Z400  z2000 ....
   private val dataMap: Map[String, Map[String, JsObject]] = constructProductTable(filename)
   private val manufacturers: Set[String] = dataMap.keySet
   
@@ -45,6 +56,7 @@ class Products(val filename:String) extends ProductsTrait{
     
   }
   
+  //TODO refactor to use foldLeft
   private def constructMap(initial:Map[String, Map[String, JsObject]], items: Iterator[JsValue]): Map[String, Map[String,JsObject]] = {
     if (items.isEmpty) {
       initial
@@ -54,7 +66,7 @@ class Products(val filename:String) extends ProductsTrait{
       val manufacturer =  item.value("manufacturer").toString().toLowerCase().replaceAll("[^A-Za-z0-9]","")
       val model =  item.value("model").toString().toLowerCase().replaceAll("[^A-Za-z0-9]","")
       
-      //to be refactored by using initial withDefaultValue
+      //TODO  refactor by using initial withDefaultValue
       if (initial.keySet.contains(manufacturer))  {
         constructMap(initial.updated(manufacturer, initial(manufacturer).updated(model, item)),items)
       }

@@ -10,7 +10,9 @@ object Runner extends App {
   
   
   
-  
+  /** Takes a dictionary and listing and appends the listing to the appropriate
+   *  product_name 
+   */
   def append(initial: Map[JsString, JsArray],listing: JsValue): Map[JsString, JsArray]= {
     val optionproduct=prod.find(listing.as[JsObject])
     if (optionproduct == None) {
