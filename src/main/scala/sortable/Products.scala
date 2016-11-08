@@ -10,7 +10,8 @@ class Products(val filename:String) extends ProductsTrait{
   
   
   /** Takes a listing (prodDescription). Returns
-   *  None if product is not found products. Some(product) if the 
+   *  None if product is not found products list, and returns Some(product) 
+   *  if the product was found
    */
   def find(prodDescription:JsObject):Option[JsObject] = {
     
