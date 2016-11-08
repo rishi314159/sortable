@@ -1,0 +1,11 @@
+To compile this program, sbt needs to be installed
+http://www.scala-sbt.org/
+
+To run this program use the following command
+
+sbt "run listings.txt products.txt"
+
+
+
+To create eclipse project, use the eclipse plugin
+
