@@ -2,18 +2,19 @@ package sortable
 import play.api.libs.json._
 
  trait ProductsTrait {
-  def find(listing:JsObject):Option[JsObject]
+  type Product = JsObject
+  type Listing = JsObject
+  def find(listing:Listing):Option[Product]
 }
 
 class Products(val filename:String) extends ProductsTrait{
   
   
   
-  /** Takes a listing . Returns
-   *  None if product is not found products list, and returns Some(product) 
-   *  if the product was found
+  /** Takes a listing . Returns None if the product is not found in the 
+   *  products list, and returns Some(product) if the product is found
    */
-  def find(listing:JsObject):Option[JsObject] = {
+  def find(listing:Listing):Option[Product] = {
     
     val manufacturer = listing.value("manufacturer").toString().toLowerCase().replaceAll("[^A-Za-z0-9]","")
     val title = listing.value("title").toString().toLowerCase().replaceAll("[^A-Za-z0-9]","")
@@ -44,17 +45,17 @@ class Products(val filename:String) extends ProductsTrait{
   //       sony    canon ......
   //      /  | ..   /   | ...
   //   DSC1 T99 .. Z400  z2000 ....
-  private val dataMap: Map[String, Map[String, JsObject]] = constructDataMap(filename)
+  private val dataMap: Map[String, Map[String, Product]] = constructDataMap(filename)
   private val manufacturers: Set[String] = dataMap.keySet
   
   
-  private def constructDataMap(filename: String):Map[String, Map[String, JsObject]] ={
+  private def constructDataMap(filename: String):Map[String, Map[String, Product]] ={
     val f = scala.io.Source.fromFile(filename)
-    f.getLines().map(Json.parse).foldLeft(Map().withDefault { x:String => Map[String, JsObject]() })(extendMap)
+    f.getLines().map(Json.parse).foldLeft(Map().withDefault { x:String => Map[String, Product]() })(extendMap)
     
   }
   
-  private def extendMap(initial:Map[String, Map[String, JsObject]], itemValue: JsValue) = {
+  private def extendMap(initial:Map[String, Map[String, Product]], itemValue: JsValue) = {
     val item = itemValue.as[JsObject]
       val manufacturer =  item.value("manufacturer").toString().toLowerCase().replaceAll("[^A-Za-z0-9]","")
       val model =  item.value("model").toString().toLowerCase().replaceAll("[^A-Za-z0-9]","")
