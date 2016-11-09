@@ -1,5 +1,8 @@
 package sortable
 import play.api.libs.json._
+import java.io.PrintWriter
+import java.io.File
+
 
 object Runner extends App {
   val listing: String = args(0)
@@ -33,6 +36,13 @@ object Runner extends App {
         "listings" -> a))
   }
   
-  result.keys.map{x => println(constructJsObject(x, result(x)))}
+  if (args.length == 2) {
+    result.keys.map{x => println(constructJsObject(x, result(x)))}
+  }
+  else {
+    val writer = new PrintWriter(new File(args(2)))
+    result.keys.map{x => writer.println(constructJsObject(x, result(x)).toString)}
+    writer.close()
+  }
   
 }

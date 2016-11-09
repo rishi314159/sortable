@@ -6,6 +6,12 @@ To run this program use the following command
 sbt "run listings.txt products.txt"
 
 
+If you would like to the store results in a file result.txt, then 
+use the following command
 
-To create eclipse project, use the eclipse plugin
+sbt "run listings.txt products.txt result.txt"
+
+
+
+To create eclipse project, use the sbt eclipse plugin
 
