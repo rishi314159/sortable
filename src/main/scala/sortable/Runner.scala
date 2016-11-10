@@ -18,13 +18,12 @@ object Runner extends App {
    */
   def append(initial: Map[JsString, JsArray],listing: JsValue): Map[JsString, JsArray]= {
     val optionproduct=prod.find(listing.as[JsObject])
-    if (optionproduct == None) {
-      initial
-    }
-    else {
-      val Some(product) = optionproduct
-      val product_name = product.value("product_name").as[JsString]
-      initial.updated(product_name, initial(product_name) :+ listing)
+    optionproduct match {
+      case None => initial
+      case Some(product) =>{
+        val product_name = product.value("product_name").as[JsString]
+        initial.updated(product_name, initial(product_name) :+ listing)
+      }
     }
   }
   
